@@ -16,3 +16,4 @@ from .add_user import add_user
 from .get_moder import get_moder
 from .check_student import check_student
 from .get_count_user import get_count_user
+from .update_status import update_status

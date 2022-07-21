@@ -2,7 +2,7 @@ from loader import dp, bot
 from aiogram import types
 from aiogram.types import ContentType, Message
 from SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student, \
-    get_count_user, get_bot_admins
+    get_count_user, get_bot_admins, update_status
 from keyboards.inline import inline_moder_to_user
 from keyboards.inline import filter_callback, filter_callback_moder
 import datetime
@@ -36,61 +36,63 @@ async def new_members_handler(message: Message):
                        f'🕐{datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")}'
                 await bot.send_message(moder_id, text, reply_markup=inline_moder_to_user(user_name=new_member.mention,
                                                                                          chat_id=message.chat.id,
-                                                                                         number=result))
+                                                                                         number=result,
+                                                                                         user_id=new_member.id))
 
 
-async def get_number(chat_id):
-    numbers = get_numbers(chat_id)
-    if numbers is None:
-        return None
-    list_numbers = numbers.split(',')
-    return sorted(list(map(int, list_numbers)))
+                async
 
+        def get_number(chat_id):
+            numbers = get_numbers(chat_id)
+            if numbers is None:
+                return None
+            list_numbers = numbers.split(',')
+            return sorted(list(map(int, list_numbers)))
 
-async def check_user(chat_id, user_id):
-    count = await bot.get_chat_members_count(chat_id)
-    number = await get_number(chat_id)
-    if number is None:
-        return
-    min_number = min(number)
-    print(count, min_number)
-    count_user = get_count_user(chat_id=chat_id, number=min_number)
-    if count >= min_number:
-        moder_chat_id = get_moder(chat_id=chat_id)
-        status = (await bot.get_chat_member(chat_id=moder_chat_id, user_id=user_id)).status
-        if status != 'member' and str(user_id) not in get_bot_admins():
-            print(check_student(user_id=user_id, chat_id=chat_id))
-            if not check_student(user_id=user_id, chat_id=chat_id):
-                if count_user == 2:
-                    set_multiplicity_numbers(chat_id, sett=number[1:])
-                    print('удалить минималку')
-                print('выйгрышное место')
-                return min_number
+    async def check_user(chat_id, user_id):
+        count = await bot.get_chat_members_count(chat_id)
+        number = await get_number(chat_id)
+        if number is None:
+            return
+        min_number = min(number)
+        print(count, min_number)
+        count_user = get_count_user(chat_id=chat_id, number=min_number)
+        if count >= min_number:
+            moder_chat_id = get_moder(chat_id=chat_id)
+            status = (await bot.get_chat_member(chat_id=moder_chat_id, user_id=user_id)).status
+            if status != 'member' and str(user_id) not in get_bot_admins():
+                print(check_student(user_id=user_id, chat_id=chat_id))
+                if not check_student(user_id=user_id, chat_id=chat_id):
+                    if count_user == 2:
+                        set_multiplicity_numbers(chat_id, sett=number[1:])
+                        print('удалить минималку')
+                    print('выйгрышное место')
+                    return min_number
+                else:
+                    print('Такой пользователь уже занял место')
             else:
-                print('Такой пользователь уже занял место')
+                print('Модератор')
         else:
-            print('Модератор')
-    else:
-        print('Посредственность')
-    return None
+            print('Посредственность')
+        return None
 
+    @dp.callback_query_handler(filter_callback_moder.filter(answer='Сongratulate'))
+    async def admin_panel(call: types.CallbackQuery, callback_data: dict):
+        text = call.message.text + f'\n{call.from_user.mention} Поздравил'
+        await call.message.answer(text=text, reply_markup=None)
+        name = callback_data.get('user_name')
+        chat_id = callback_data.get('chat_id')
+        user_id = callback_data.get('user_id')
+        number = callback_data.get('number')
+        await bot.send_message(chat_id=chat_id, text=f'🎉 Поздравляю, {name}!\n'
+                                                     f'Как же удачно вы попали в нужное место и в нужное время!\n'
+                                                     f'Вы {number} участник коммьюнити.\n'
+                                                     f'Вас ждут плюшки и печенюшки!🎉')
+        await call.message.delete()
+        update_status(user_id=user_id, chat_id=chat_id)
 
-@dp.callback_query_handler(filter_callback_moder.filter(answer='Сongratulate'))
-async def admin_panel(call: types.CallbackQuery, callback_data: dict):
-    text = call.message.text + f'\n{call.from_user.mention} Поздравил'
-    await call.message.answer(text=text, reply_markup=None)
-    name = callback_data.get('user_name')
-    chat_id = callback_data.get('chat_id')
-    number = callback_data.get('number')
-    await bot.send_message(chat_id=chat_id, text=f'🎉 Поздравляю, {name}!\n'
-                                                 f'Как же удачно вы попали в нужное место и в нужное время!\n'
-                                                 f'Вы {number} участник коммьюнити.\n'
-                                                 f'Вас ждут плюшки и печенюшки!🎉')
-    await call.message.delete()
-
-
-@dp.callback_query_handler(filter_callback.filter(answer='Skip'))
-async def admin_panel(call: types.CallbackQuery):
-    text = call.message.text + f'\n{call.from_user.mention} скипнул'
-    await call.message.answer(text=text, reply_markup=None)
-    await call.message.delete()
+    @dp.callback_query_handler(filter_callback_moder.filter(answer='Skip'))
+    async def admin_panel(call: types.CallbackQuery):
+        text = call.message.text + f'\n{call.from_user.mention} скипнул'
+        await call.message.answer(text=text, reply_markup=None)
+        await call.message.delete()
