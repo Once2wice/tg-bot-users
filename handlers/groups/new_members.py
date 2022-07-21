@@ -3,7 +3,7 @@ from data.config import admins
 from aiogram import types
 from aiogram.types import ContentType, Message
 from SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student, \
-    get_count_user
+    get_count_user, get_bot_admins
 from keyboards.inline import inline_moder_to_user
 from keyboards.inline import filter_callback, filter_callback_moder
 import datetime
@@ -15,7 +15,7 @@ async def new_members_handler(message: Message):
     bot_id = (await bot.get_me()).id
     new_member = message.new_chat_members[0]
     if new_member.id == bot_id:
-        if message.from_user.id in admins:
+        if message.from_user.id in get_bot_admins():
             await add_new_skillbox_chat(chat_id=message.chat.id, name=message.chat.title)
         else:
             await message.answer('Меня добавил не админ, всем пока')
