@@ -11,6 +11,7 @@ def set_bot_password(password):
         data = (password,)
         cursor.execute(sqlite_insert_query, data)
         sqlite_connection.commit()
+        cursor.close()
 
     except sqlite3.Error as error:
         print("Ошибка при работе с SQLite", error)

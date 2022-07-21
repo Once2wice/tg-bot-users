@@ -1,5 +1,4 @@
 from loader import dp, bot
-from data.config import admins
 from aiogram import types
 from aiogram.types import ContentType, Message
 from SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student, \
@@ -15,7 +14,7 @@ async def new_members_handler(message: Message):
     bot_id = (await bot.get_me()).id
     new_member = message.new_chat_members[0]
     if new_member.id == bot_id:
-        if message.from_user.id in get_bot_admins():
+        if str(message.from_user.id) in get_bot_admins():
             await add_new_skillbox_chat(chat_id=message.chat.id, name=message.chat.title)
         else:
             await message.answer('Меня добавил не админ, всем пока')
@@ -59,7 +58,7 @@ async def check_user(chat_id, user_id):
     if count >= min_number:
         moder_chat_id = get_moder(chat_id=chat_id)
         status = (await bot.get_chat_member(chat_id=moder_chat_id, user_id=user_id)).status
-        if status != 'member':
+        if status != 'member' and str(user_id) not in get_bot_admins():
             print(check_student(user_id=user_id, chat_id=chat_id))
             if not check_student(user_id=user_id, chat_id=chat_id):
                 if count_user == 2:
