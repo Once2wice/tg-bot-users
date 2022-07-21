@@ -53,9 +53,9 @@
      + token (TEXT) - токен бота;
      + password (TEXT) - пароль, который необходимо внести для приобретения прав администратора;
    + data - данные для запуска бота;
-   + filters - 
-   + handlers -
-   + keyboards - 
+   + filters - условие для попадания в handlers;
+   + handlers - функция 
+   + keyboards - функции для создания управляющих кнопок;
    + middlewares - предобработка запроса;
    + states - 
    + utils - 
