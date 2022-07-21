@@ -2,7 +2,8 @@ from loader import dp, bot
 from data.config import admins
 from aiogram import types
 from aiogram.types import ContentType, Message
-from SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student
+from SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student, \
+    get_count_user
 from keyboards.inline import inline_moder_to_user
 from keyboards.inline import filter_callback, filter_callback_moder
 import datetime
@@ -41,7 +42,8 @@ async def new_members_handler(message: Message):
 
 async def get_number(chat_id):
     numbers = get_numbers(chat_id)
-    numbers = numbers[0][0]
+    if numbers is None:
+        return None
     list_numbers = numbers.split(',')
     return sorted(list(map(int, list_numbers)))
 
@@ -49,13 +51,21 @@ async def get_number(chat_id):
 async def check_user(chat_id, user_id):
     count = await bot.get_chat_members_count(chat_id)
     number = await get_number(chat_id)
+    if number is None:
+        return
     min_number = min(number)
+    print(count, min_number)
+    count_user = get_count_user(chat_id=chat_id, number=min_number)
     if count >= min_number:
         moder_chat_id = get_moder(chat_id=chat_id)
         status = (await bot.get_chat_member(chat_id=moder_chat_id, user_id=user_id)).status
         if status != 'member':
+            print(check_student(user_id=user_id, chat_id=chat_id))
             if not check_student(user_id=user_id, chat_id=chat_id):
-                set_multiplicity_numbers(chat_id, sett=number[1:])
+                if count_user == 2:
+                    set_multiplicity_numbers(chat_id, sett=number[1:])
+                    print('удалить минималку')
+                print('выйгрышное место')
                 return min_number
             else:
                 print('Такой пользователь уже занял место')

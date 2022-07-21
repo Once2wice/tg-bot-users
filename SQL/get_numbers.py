@@ -15,6 +15,9 @@ def get_numbers(chat_id):
         records = cursor.fetchall()
         sqlite_connection.commit()
         cursor.close()
+        print(records)
+        records = records[0][0]
+        print(records)
         return records
 
     except sqlite3.Error as error:
