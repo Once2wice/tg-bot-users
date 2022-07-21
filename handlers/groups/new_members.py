@@ -25,7 +25,7 @@ async def new_members_handler(message: Message):
             result = await check_user(message.chat.id, new_member.id)
             if result is not None:
                 add_user(user_name=new_member.mention,
-                         user_id=message.from_user.id,
+                         user_id=new_member.id,
                          number=result,
                          chat_id=message.chat.id)
                 moder_id = get_moder(message.chat.id)
