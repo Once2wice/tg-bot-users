@@ -9,10 +9,11 @@
 - 
 
 # Requirements
-- Python 3.8 +
-- aiogram
-- environs
-- sqlite 3
+- Python 3.8
+- aiogram 2.7
+- aiohttp 3.6.2
+- aioredis 1.3.1
+- python-dotenv
 
 # Запуск телеграм-бота
 
