@@ -7,7 +7,6 @@ def dell_moderator_chat(user_chat_id):
         path = os.path.join(os.getcwd(), 'SQL', 'my-test.db')
         sqlite_connection = sqlite3.connect(path)
         cursor = sqlite_connection.cursor()
-
         sqlite_insert_query = """UPDATE skillbox_chat SET
                                 chat_moderators_id = NULL
                                 WHERE chat_id = ?"""

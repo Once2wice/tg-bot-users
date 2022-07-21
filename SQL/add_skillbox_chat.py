@@ -3,8 +3,12 @@ import os
 
 
 async def check_chat(cursor, chat_id):
-    req = '''SELECT EXISTS(SELECT chat_id FROM skillbox_chat where chat_id = ?)'''
-    data_tuple = (chat_id,)
+    sqlite_select_with_param = """SELECT id FROM skillbox_chat WHERE chat_id = ?"""
+    data = (chat_id,)
+    cursor.execute(sqlite_select_with_param, data)
+    records = cursor.fetchall()[0][0]
+    req = '''SELECT EXISTS(SELECT chat_i d FROM skillbox_chat where chat_id = ?)'''
+    data_tuple = (records,)
     res = cursor.execute(req, data_tuple).fetchone()[0]
     if res == 0:
         print('Запись не найдена')
