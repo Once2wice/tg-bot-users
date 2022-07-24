@@ -13,12 +13,16 @@ def get_list_user_group(key=None):
             cursor.execute(sqlite_insert_query)
         else:
             if key == 'NULL':
-                key = None
-            sqlite_insert_query = """SELECT *
-                                    FROM skillbox_chat
-                                    WHERE chat_moderators_id IS ?"""
-            data = (key,)
-            cursor.execute(sqlite_insert_query, data)
+                sqlite_insert_query = """SELECT *
+                                        FROM skillbox_chat
+                                        WHERE chat_moderators_id IS NULL"""
+                cursor.execute(sqlite_insert_query)
+            else:
+                sqlite_insert_query = """SELECT *
+                                        FROM skillbox_chat
+                                        WHERE chat_moderators_id = ?"""
+                data = (str(key),)
+                cursor.execute(sqlite_insert_query, data)
         records = cursor.fetchall()
         sqlite_connection.commit()
         cursor.close()

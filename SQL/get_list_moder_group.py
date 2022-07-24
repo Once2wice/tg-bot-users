@@ -2,7 +2,7 @@ import os
 import sqlite3
 
 
-def get_list_moder_group(key):
+def get_list_moder_group():
     try:
         path = os.path.join(os.getcwd(), 'SQL', 'my-test.db')
         sqlite_connection = sqlite3.connect(path)

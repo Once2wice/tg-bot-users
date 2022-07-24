@@ -3,8 +3,9 @@ from aiogram import types
 from aiogram.types import ContentType, Message
 from SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student, \
     get_count_user, get_bot_admins, update_status
-from keyboards.inline import inline_moder_to_user
-from keyboards.inline import filter_callback, filter_callback_moder
+from keyboards.inline import inline_moder_to_user, inline_list_user_group
+from keyboards.inline import filter_callback_moder, filter_callback
+from filters import IsModers
 import datetime
 
 
@@ -97,3 +98,13 @@ async def admin_panel(call: types.CallbackQuery):
     text = call.message.text + f'\n{call.from_user.mention} скипнул'
     await call.message.answer(text=text, reply_markup=None)
     await call.message.delete()
+
+
+@dp.message_handler(IsModers(), commands=['groups'])
+async def groups_moders(message: types.Message):
+    await message.answer('Группы модера', reply_markup=inline_list_user_group(message.chat.id))
+
+@dp.callback_query_handler(IsModers(), filter_callback.filter(answer='s'))
+async def list_people():
+    pass
+

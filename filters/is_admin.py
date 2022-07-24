@@ -1,7 +1,6 @@
 from aiogram.dispatcher.filters import BoundFilter
 from aiogram import types
-
-from SQL import get_bot_admins
+from SQL import get_bot_admins, get_list_moder_group
 
 
 class IsAdmin(BoundFilter):
@@ -19,3 +18,13 @@ class IsPrivate(BoundFilter):
             return message.chat.type == types.ChatType.PRIVATE
         elif isinstance(message, types.CallbackQuery):
             return message.message.chat.type == types.ChatType.PRIVATE
+
+
+class IsModers(BoundFilter):
+    async def check(self, message):
+        if isinstance(message, types.Message):
+            groups_moder_list = get_list_moder_group()
+            moder_id = [data[2] for data in groups_moder_list]
+            if str(message.chat.id) in moder_id:
+                return True
+        return False
