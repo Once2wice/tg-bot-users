@@ -2,17 +2,17 @@ import os
 import sqlite3
 
 
-def get_list_user_group(key=None):
+def get_list_user_group(moder_chat_id=None):
     try:
         path = os.path.join(os.getcwd(), 'SQL', 'my-test.db')
         sqlite_connection = sqlite3.connect(path)
         cursor = sqlite_connection.cursor()
-        if key is None:
+        if moder_chat_id is None:
             sqlite_insert_query = """SELECT *
                                     FROM skillbox_chat"""
             cursor.execute(sqlite_insert_query)
         else:
-            if key == 'NULL':
+            if moder_chat_id == 'NULL':
                 sqlite_insert_query = """SELECT *
                                         FROM skillbox_chat
                                         WHERE chat_moderators_id IS NULL"""
@@ -21,7 +21,7 @@ def get_list_user_group(key=None):
                 sqlite_insert_query = """SELECT *
                                         FROM skillbox_chat
                                         WHERE chat_moderators_id = ?"""
-                data = (str(key),)
+                data = (str(moder_chat_id),)
                 cursor.execute(sqlite_insert_query, data)
         records = cursor.fetchall()
         sqlite_connection.commit()

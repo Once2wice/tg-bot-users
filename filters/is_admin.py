@@ -22,9 +22,12 @@ class IsPrivate(BoundFilter):
 
 class IsModers(BoundFilter):
     async def check(self, message):
+        groups_moder_list = get_list_moder_group()
+        moder_id = [data[2] for data in groups_moder_list]
         if isinstance(message, types.Message):
-            groups_moder_list = get_list_moder_group()
-            moder_id = [data[2] for data in groups_moder_list]
-            if str(message.chat.id) in moder_id:
-                return True
+            chat_id = message.chat.id
+        else:
+            chat_id = message.message.chat.id
+        if str(chat_id) in moder_id:
+            return True
         return False
