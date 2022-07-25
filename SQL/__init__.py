@@ -17,3 +17,5 @@ from .get_moder import get_moder
 from .check_student import check_student
 from .get_count_user import get_count_user
 from .update_status import update_status
+from .get_lost_3_favorite import get_lost_3_favorite
+from .get_str_status import get_str_status

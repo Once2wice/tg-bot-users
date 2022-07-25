@@ -2,8 +2,8 @@ from loader import dp, bot
 from aiogram import types
 from aiogram.types import ContentType, Message
 from SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student, \
-    get_count_user, get_bot_admins, update_status
-from keyboards.inline import inline_moder_to_user, inline_list_user_group
+    get_count_user, get_bot_admins, update_status, get_lost_3_favorite, get_str_status
+from keyboards.inline import inline_moder_to_user, inline_list_user_group, filter_callback
 from keyboards.inline import filter_callback_moder, filter_callback_chat_id
 from filters import IsModers
 import datetime
@@ -107,9 +107,29 @@ async def groups_moders(message: types.Message):
                                                              action='ListUserFromModer'))
 
 
-@dp.callback_query_handler(IsModers(), filter_callback_chat_id.filter(action='ListUserFromModer'))
+@dp.callback_query_handler(filter_callback_chat_id.filter(action='ListUserFromModer'))
 async def list_people(call: types.CallbackQuery, callback_data: dict):
     await call.answer()
     chat_id = callback_data.get('chat_id')
-    await call.message.answer(chat_id)
+    records, name_chat = get_lost_3_favorite(chat_id)
+    print(records, name_chat)
+    for record in records:
+        user_name = record[1]
+        user_id = record[2]
+        number = record[3]
+        date = record[4]
+        status = get_str_status(record[5])
+        text = f'🎉 {name_chat}\n' \
+               f'({user_name})\n' \
+               f'🔢 {number}\n' \
+               f'🕐{date}\n'\
+               f'Прошлый статус: {status}'
+        await call.message.answer(text, reply_markup=inline_moder_to_user(user_name=user_name,
+                                                                          chat_id=chat_id,
+                                                                          number=number,
+                                                                          user_id=user_id))
 
+
+@dp.callback_query_handler(filter_callback.filter(answer='StartPanel'))
+async def start_panel(call: types.CallbackQuery):
+    await call.message.delete()
