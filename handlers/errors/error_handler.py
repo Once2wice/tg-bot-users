@@ -4,7 +4,7 @@ from loader import dp
 
 
 @dp.errors_handler()
-async def errors_handler(update, exception):
+async def errors_handler(update, exception) -> bool:
     """
     Exceptions handler. Catches all exceptions within task factory tasks.
     :param update:

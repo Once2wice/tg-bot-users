@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 
-async def check_chat(cursor, chat_id):
+async def check_chat(cursor, chat_id) -> bool:
     req = '''SELECT EXISTS(SELECT chat_id FROM skillbox_chat where chat_id = ?)'''
     data_tuple = (chat_id,)
     res = cursor.execute(req, data_tuple).fetchone()[0]

@@ -12,7 +12,6 @@ def get_bot_token():
         records = cursor.fetchall()
         sqlite_connection.commit()
         records = records[0][0]
-        # print(f'Токен: {records}')
         cursor.close()
         return records
 

@@ -5,15 +5,14 @@ from SQL import get_bot_admins, get_list_moder_group
 
 class IsAdmin(BoundFilter):
 
-    async def check(self, message: types.Message):
+    async def check(self, message: types.Message)-> bool:
         res = str(message.from_user.id) in get_bot_admins()
-        # print(res)
         return res
 
 
 class IsPrivate(BoundFilter):
 
-    async def check(self, message):
+    async def check(self, message) -> bool:
         if isinstance(message, types.Message):
             return message.chat.type == types.ChatType.PRIVATE
         elif isinstance(message, types.CallbackQuery):
@@ -21,7 +20,7 @@ class IsPrivate(BoundFilter):
 
 
 class IsModers(BoundFilter):
-    async def check(self, message):
+    async def check(self, message) -> bool:
         groups_moder_list = get_list_moder_group()
         moder_id = [data[2] for data in groups_moder_list]
         if isinstance(message, types.Message):

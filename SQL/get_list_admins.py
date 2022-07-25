@@ -19,7 +19,6 @@ def get_bot_admins(full=False):
             sqlite_connection.commit()
             records = sum(map(list, records), [])
         cursor.close()
-        # print(records)
         return records
 
     except sqlite3.Error as error:
