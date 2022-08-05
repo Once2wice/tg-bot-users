@@ -1,6 +1,6 @@
 from aiogram.dispatcher.filters import BoundFilter
 from aiogram import types
-from SQL import get_bot_admins, get_list_moder_group
+from filters.SQL import get_bot_admins, get_list_moder_group
 
 
 class IsAdmin(BoundFilter):

@@ -1,7 +1,7 @@
 from filters import IsPrivate
 from aiogram import types
 from loader import dp
-from SQL import get_bot_password, add_new_admin
+from filters.SQL import get_bot_password, add_new_admin
 
 
 @dp.message_handler(IsPrivate(),

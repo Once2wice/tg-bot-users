@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram import types
 from loader import dp, bot
 from states import Admin_state
-from SQL import set_bot_password
+from filters.SQL import set_bot_password
 
 
 @dp.callback_query_handler(IsAdmin(),

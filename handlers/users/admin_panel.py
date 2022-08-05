@@ -7,7 +7,7 @@ from filters import IsAdmin, IsPrivate
 from aiogram import types
 from loader import dp
 from states import Admin_state
-from SQL import get_bot_admins, del_admin
+from filters.SQL import get_bot_admins, del_admin
 
 
 @dp.callback_query_handler(IsAdmin(),

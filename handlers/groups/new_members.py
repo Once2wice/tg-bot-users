@@ -1,7 +1,7 @@
 from loader import dp, bot
 from aiogram import types
 from aiogram.types import ContentType, Message
-from SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student, \
+from filters.SQL import add_new_skillbox_chat, get_numbers, set_multiplicity_numbers, add_user, get_moder, check_student, \
     get_count_user, get_bot_admins, update_status, get_lost_3_favorite, get_str_status
 from keyboards.inline import inline_moder_to_user, inline_list_user_group, filter_callback
 from keyboards.inline import filter_callback_moder, filter_callback_chat_id
